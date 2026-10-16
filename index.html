@@ -31,6 +31,8 @@ input:focus{border-color:var(--p);background:#fff}
 .nav button{flex:1;border:0;background:none;font:inherit;font-size:12px;font-weight:700;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;border-radius:14px;cursor:pointer}
 .nav button span{font-size:22px}.nav button.on{color:var(--p);background:#eef0ff}
 .hide{display:none!important}
+.off{position:absolute;opacity:0;width:1px;height:1px;overflow:hidden;pointer-events:none}
+.two label.btn{text-align:center;cursor:pointer;flex:1}
 .preview{width:100%;aspect-ratio:4/3;border-radius:16px;background:#f1f2fa center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:40px;margin-bottom:8px;overflow:hidden}
 .preview img{width:100%;height:100%;object-fit:cover}
 .two{display:flex;gap:8px}.two .btn{margin-top:4px;font-size:14px;padding:11px}
@@ -94,7 +96,7 @@ setLang(lang);
 
 /* ---------- helpers ---------- */
 let toastT;
-function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),2800);}
+function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),4500);}
 const view = h => { $('#app').innerHTML = h; window.scrollTo(0,0); };
 let current = null;
 const go = fn => { stopScan(); current = fn; fn(); };
@@ -103,18 +105,18 @@ async function loadSettings(){const {data}=await sb.from('app_settings').select(
 const waLink = n => { let d=String(n||'').replace(/\D/g,''); if(d.startsWith('0')) d='213'+d.slice(1); return 'https://wa.me/'+d; };
 const money = n => Number(n).toLocaleString(lang==='ar'?'ar-DZ':'fr-FR',{maximumFractionDigits:2})+' '+t('da');
 const url = u => !u ? '' : (/^https?:\/\//i.test(u)?u:'https://'+u.replace(/^@/,''));
+const em = e => { console.error(e); return String((e&&(e.message||e.error_description))||t('err')); };
 function busy(btn,on){btn.disabled=on;if(on){btn._h=btn.innerHTML;btn.innerHTML='<span class="spin"></span>';}else if(btn._h)btn.innerHTML=btn._h;}
 
 /* ---------- images ---------- */
 function compress(file,max=1280){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{let w=img.width,h=img.height;const r=Math.min(1,max/Math.max(w,h));w=Math.round(w*r);h=Math.round(h*r);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>{URL.revokeObjectURL(u);b?res(b):rej()},'image/jpeg',.85)};img.onerror=rej;img.src=u;});}
 async function upload(bucket,blob){const path=`${me.id}/${Date.now()}.jpg`;const {error}=await sb.storage.from(bucket).upload(path,blob,{contentType:'image/jpeg'});if(error)throw error;return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;}
 function imgPicker(label,current){return `<label>${label}</label><div class="preview" id="prev">${current?`<img src="${esc(current)}">`:'🖼️'}</div>
-<div class="two"><button type="button" class="btn sec" id="bCam">${t('camera')}</button><button type="button" class="btn sec" id="bGal">${t('gallery')}</button></div>
-<input type="file" id="fCam" accept="image/*" capture="environment" class="hide"><input type="file" id="fGal" accept="image/*" class="hide">`;}
+<div class="two"><label class="btn sec" for="fCam">${t('camera')}</label><label class="btn sec" for="fGal">${t('gallery')}</label></div>
+<input type="file" id="fCam" accept="image/*" capture="environment" class="off"><input type="file" id="fGal" accept="image/*" class="off">`;}
 function bindImg(setBlob){
-  const on=async f=>{if(!f)return;try{const b=await compress(f);setBlob(b);$('#prev').innerHTML=`<img src="${URL.createObjectURL(b)}">`;}catch{toast(t('err'));}};
-  $('#bCam').onclick=()=>$('#fCam').click();$('#bGal').onclick=()=>$('#fGal').click();
-  $('#fCam').onchange=e=>on(e.target.files[0]);$('#fGal').onchange=e=>on(e.target.files[0]);
+  const on=async f=>{if(!f)return;try{const b=await compress(f);setBlob(b);$('#prev').innerHTML=`<img src="${URL.createObjectURL(b)}">`;}catch(x){toast(em(x));}};
+  $('#fCam').onchange=e=>{on(e.target.files[0]);e.target.value='';};$('#fGal').onchange=e=>{on(e.target.files[0]);e.target.value='';};
 }
 
 /* ---------- barcode scanner ---------- */
@@ -190,6 +192,7 @@ async function pageStoreInfo(onboarding){
     const name=$('#sn').value.trim();if(!name)return toast(t('nameReq'));
     const btn=$('#sv');busy(btn,true);
     try{
+      const row={name,facebook:$('#fb').value.trim()||null,instagram:$('#ig').value.trim()||null,tiktok:$('#tk').value.trim()||null};
       if(blob)row.logo_url=await upload('store-logos',blob);
       let r;
       if(store)r=await sb.from('stores').update(row).eq('id',store.id).select().single();
@@ -197,7 +200,7 @@ async function pageStoreInfo(onboarding){
       if(r.error)throw r.error;
       store=r.data;toast(t('saved'));
       go(onboarding?()=>pageQR(true):pageSettings);
-    }catch(e){busy(btn,false);toast(t('err'));}
+    }catch(e){busy(btn,false);toast(em(e));}
   };
 }
 
@@ -245,7 +248,7 @@ async function pageAdd(){
     }catch(e){
       busy(btn,false);const m=String(e.message||'');
       if(m.includes('TRIAL_LIMIT_REACHED'))modal(`<div class="ic">🔒</div>${t('trialEnd').replace('{p}',S.price_dzd)}\n<a href="${waLink(S.admin_whatsapp)}" target="_blank" style="color:#16a34a;font-weight:800" dir="ltr">${esc(S.admin_whatsapp)}</a>`);
-      else if(e.code==='23505')toast(t('dupBarcode'));else toast(t('err'));
+      else if(e.code==='23505')toast(t('dupBarcode'));else toast(em(e));
     }
   };
 }
@@ -301,7 +304,7 @@ function pageEdit(p){
       const {error}=await sb.from('products').update(row).eq('id',p.id);
       if(error)throw error;
       toast(t('saved'));go(pageProducts);
-    }catch(e){busy(btn,false);toast(e.code==='23505'?t('dupBarcode'):t('err'));}
+    }catch(e){busy(btn,false);toast(e.code==='23505'?t('dupBarcode'):em(e));}
   };
 }
 
@@ -406,7 +409,7 @@ async function boot(){
   if(!session)return go(pageLogin);
   me=session.user;
   const {data:pr}=await sb.from('profiles').select('role,phone').eq('id',me.id).maybeSingle();
-  profile=pr||{role:'merchant',phone:''};
+  if(!pr){const ph=(me.email||'').split('@')[0];const r=await sb.from('profiles').insert({id:me.id,phone:ph}).select('role,phone').single();if(r.error)toast(em(r.error));profile=r.data||{role:'merchant',phone:ph};}else profile=pr;
   if(profile.role==='admin')return go(()=>pageAdmin('m'));
   const {data:st}=await sb.from('stores').select('*').eq('owner_id',me.id).maybeSingle();
   store=st;
