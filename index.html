@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<title>Shop Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--p:#4f46e5;--p2:#7c3aed;--bg:#f3f4fb;--card:#fff;--tx:#1e1b3a;--mut:#6b7280;--ok:#16a34a;--err:#dc2626;--bd:#e5e7eb;--r:18px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Cairo',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+#app{max-width:520px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:84px}
+.head{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:22px 20px 34px;border-radius:0 0 28px 28px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.head h1{margin:0;font-size:20px;font-weight:800}
+.chip{background:rgba(255,255,255,.2);padding:4px 12px;border-radius:99px;font-size:13px;font-weight:700;white-space:nowrap}
+.body{padding:0 16px;margin-top:-18px}
+.card{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:0 6px 22px rgba(79,70,229,.09);margin-bottom:14px}
+label{display:block;font-size:13px;font-weight:700;color:var(--mut);margin:12px 0 6px}
+input,select{width:100%;padding:13px 14px;border:1.5px solid var(--bd);border-radius:14px;font:inherit;font-size:16px;background:#fafafe;color:var(--tx);outline:none}
+input:focus{border-color:var(--p);background:#fff}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;font:inherit;font-weight:800;font-size:16px;color:#fff;background:linear-gradient(135deg,var(--p),var(--p2));margin-top:16px;cursor:pointer;box-shadow:0 6px 16px rgba(79,70,229,.3)}
+.btn:active{transform:scale(.98)}
+.btn.sec{background:#eef0ff;color:var(--p);box-shadow:none}
+.btn.danger{background:#fee2e2;color:var(--err);box-shadow:none}
+.btn.ok{background:linear-gradient(135deg,#16a34a,#22c55e)}
+.btn[disabled]{opacity:.6}
+.inline{display:flex;gap:8px}.inline input{flex:1}
+.icon-btn{border:0;background:#eef0ff;color:var(--p);border-radius:14px;width:52px;font-size:22px;cursor:pointer}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;background:#fff;display:flex;justify-content:space-around;padding:8px 8px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 20px rgba(0,0,0,.07);border-radius:22px 22px 0 0}
+.nav button{flex:1;border:0;background:none;font:inherit;font-size:12px;font-weight:700;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;border-radius:14px;cursor:pointer}
+.nav button span{font-size:22px}.nav button.on{color:var(--p);background:#eef0ff}
+.hide{display:none!important}
+.preview{width:100%;aspect-ratio:4/3;border-radius:16px;background:#f1f2fa center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:40px;margin-bottom:8px;overflow:hidden}
+.preview img{width:100%;height:100%;object-fit:cover}
+.two{display:flex;gap:8px}.two .btn{margin-top:4px;font-size:14px;padding:11px}
+.scanbox{position:relative;background:#000;border-radius:16px;overflow:hidden;margin:10px 0}
+.scanbox #reader,.scanbox .reader{width:100%;min-height:220px}
+.scanbox video{object-fit:cover}
+.torch,.closeb{position:absolute;top:10px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:20px;z-index:5;cursor:pointer}
+.torch{inset-inline-start:10px}.torch.on{background:#facc15;color:#000}.closeb{inset-inline-end:10px}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.row:last-child{border:0}.row .th{width:52px;height:52px;border-radius:12px;background:#f1f2fa center/cover;flex:none}
+.row .nm{flex:1;min-width:0;font-weight:700}.row .nm small{display:block;color:var(--mut);font-weight:600}
+.row .mini{border:0;background:#eef0ff;color:var(--p);padding:8px 14px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer}
+.pill{font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px}
+.pill.t{background:#fef3c7;color:#b45309}.pill.u{background:#dcfce7;color:#15803d}
+.lang{display:flex;gap:8px}.lang button{flex:1;padding:12px;border-radius:14px;border:1.5px solid var(--bd);background:#fff;font:inherit;font-weight:800;cursor:pointer}
+.lang button.on{border-color:var(--p);background:#eef0ff;color:var(--p)}
+.menu button{display:flex;width:100%;align-items:center;gap:12px;border:0;background:none;font:inherit;font-weight:700;font-size:16px;padding:14px 4px;border-bottom:1px solid var(--bd);cursor:pointer;color:var(--tx)}
+.menu button:last-child{border:0}.menu button span{font-size:22px}
+.hero{background:linear-gradient(160deg,var(--p),var(--p2));color:#fff;text-align:center;padding:44px 20px 60px;border-radius:0 0 36px 36px}
+.logo{width:110px;height:110px;border-radius:50%;background:#fff center/cover;border:4px solid rgba(255,255,255,.6);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:48px;overflow:hidden}
+.logo img{width:100%;height:100%;object-fit:cover}
+.hero h1{margin:0 0 6px;font-size:26px;font-weight:800}.hero p{margin:0;opacity:.9}
+.soc{display:flex;justify-content:center;gap:16px;margin:6px 0 4px}.soc a{width:54px;height:54px;display:block}.soc svg{width:100%;height:100%;border-radius:16px;box-shadow:0 5px 14px rgba(0,0,0,.18)}
+.big{font-size:18px;padding:18px}
+.res img{width:100%;border-radius:16px;aspect-ratio:1;object-fit:cover;background:#f1f2fa}
+.res h2{margin:14px 0 4px;font-size:22px}.res .pr{font-size:30px;font-weight:800;color:var(--p)}
+.center{text-align:center}.mut{color:var(--mut)}
+#qrbox{display:flex;justify-content:center;padding:14px;background:#fff;border-radius:16px}
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1e1b3a;color:#fff;padding:12px 20px;border-radius:14px;font-weight:700;z-index:99;opacity:0;pointer-events:none;transition:.25s;max-width:90%;text-align:center;white-space:pre-line}
+#toast.show{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(15,12,40,.6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:90}
+.modal .box{background:#fff;border-radius:22px;padding:24px;max-width:380px;width:100%;text-align:center;white-space:pre-line;font-weight:600;line-height:1.8}
+.modal .box .ic{font-size:44px}
+.spin{display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;vertical-align:middle}
+@keyframes s{to{transform:rotate(360deg)}}
+.langtop{position:absolute;top:14px;inset-inline-end:14px;display:flex;gap:6px}
+.langtop button{border:0;background:rgba(255,255,255,.22);color:#fff;border-radius:99px;padding:6px 12px;font:inherit;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- i18n ---------- */
+const T = {
+ar:{appName:'سوق برو',phone:'رقم الهاتف',password:'كلمة السر',enter:'دخول / إنشاء حساب',badPhone:'رقم الهاتف غير صالح',badPw:'كلمة السر 6 أحرف على الأقل',wrongPw:'كلمة السر غير صحيحة',confirmOff:'عطّل Confirm email في Supabase',storeInfo:'معلومات المتجر',storeName:'اسم المتجر',logo:'صورة / شعار المتجر',camera:'📷 كاميرا',gallery:'🖼️ المعرض',fb:'رابط Facebook',ig:'رابط Instagram',tk:'رابط TikTok',social:'مواقع التواصل',next:'التالي',save:'حفظ',qrTitle:'QR المتجر',qrHint:'اطبع هذا الرمز وضعه في متجرك ليمسحه زبائنك',download:'تحميل QR',addProduct:'إضافة منتج',pname:'اسم المنتج',price:'السعر',barcode:'الباركود',scan:'مسح',noTorch:'الفلاش غير مدعوم',saved:'تم الحفظ ✓',productImg:'صورة المنتج',settings:'الإعدادات',language:'اللغة',products:'المنتجات',edit:'تعديل',saveEdits:'حفظ التعديلات',logout:'Déconnecter',welcome:'مرحبًا بكم في',scanProduct:'مسح المنتج',scanNew:'مسح منتج جديد',notFound:'المنتج غير موجود في هذا المتجر',trialEnd:'انتهت المنتجات التجريبية\nلإضافة منتجات غير محدودة، اشترك بـ {p} دج.\nللتفعيل، تواصل مع المدير عبر WhatsApp:',close:'إغلاق',camErr:'تعذّر فتح الكاميرا',dupBarcode:'هذا الباركود مضاف مسبقًا',required:'املأ الاسم والسعر والباركود',storeNF:'المتجر غير موجود',search:'ابحث برقم الهاتف أو اسم المتجر',merchants:'التجار',activate:'تفعيل غير محدود',unlimited:'غير محدود',trial:'تجربة',adminSettings:'إعدادات المدير',adminWa:'رقم WhatsApp الظاهر للتجار',adminPhone:'رقم هاتف المدير',newPw:'كلمة مرور جديدة (اختياري)',activated:'تم التفعيل ✓',confirmActivate:'تفعيل حساب غير محدود لهذا التاجر؟',back:'رجوع',da:'دج',noProducts:'لا توجد منتجات بعد',noMerch:'لا يوجد تجار',nameReq:'اسم المتجر مطلوب',err:'حدث خطأ، حاول مرة أخرى',storeSettings:'معلومات المتجر',qrNav:'QR',add:'إضافة',admin:'لوحة المدير',tapScan:'وجّه الكاميرا نحو الباركود'},
+fr:{appName:'Shop Pro',phone:'Numéro de téléphone',password:'Mot de passe',enter:'Connexion / Créer un compte',badPhone:'Numéro invalide',badPw:'Mot de passe : 6 caractères minimum',wrongPw:'Mot de passe incorrect',confirmOff:'Désactivez Confirm email dans Supabase',storeInfo:'Infos de la boutique',storeName:'Nom de la boutique',logo:'Photo / logo de la boutique',camera:'📷 Caméra',gallery:'🖼️ Galerie',fb:'Lien Facebook',ig:'Lien Instagram',tk:'Lien TikTok',social:'Réseaux sociaux',next:'Suivant',save:'Enregistrer',qrTitle:'QR de la boutique',qrHint:'Imprimez ce code et affichez-le pour que vos clients le scannent',download:'Télécharger le QR',addProduct:'Ajouter un produit',pname:'Nom du produit',price:'Prix',barcode:'Code-barres',scan:'Scanner',noTorch:'Flash non supporté',saved:'Enregistré ✓',productImg:'Photo du produit',settings:'Paramètres',language:'Langue',products:'Produits',edit:'Modifier',saveEdits:'Enregistrer les modifications',logout:'Déconnecter',welcome:'Bienvenue chez',scanProduct:'Scanner un produit',scanNew:'Scanner un autre produit',notFound:"Produit introuvable dans cette boutique",trialEnd:"Produits d'essai épuisés\nPour des produits illimités, abonnez-vous pour {p} DA.\nPour activer, contactez l'admin sur WhatsApp :",close:'Fermer',camErr:"Impossible d'ouvrir la caméra",dupBarcode:'Ce code-barres existe déjà',required:'Remplissez nom, prix et code-barres',storeNF:'Boutique introuvable',search:'Rechercher par téléphone ou boutique',merchants:'Commerçants',activate:'Activer illimité',unlimited:'Illimité',trial:'Essai',adminSettings:'Paramètres admin',adminWa:'Numéro WhatsApp affiché aux commerçants',adminPhone:"Téléphone de l'admin",newPw:'Nouveau mot de passe (optionnel)',activated:'Activé ✓',confirmActivate:'Activer le compte illimité pour ce commerçant ?',back:'Retour',da:'DA',noProducts:'Aucun produit',noMerch:'Aucun commerçant',nameReq:'Nom de la boutique requis',err:'Erreur, réessayez',storeSettings:'Infos boutique',qrNav:'QR',add:'Ajouter',admin:'Espace admin',tapScan:'Visez le code-barres'}
+};
+let lang = localStorage.getItem('lang') || 'ar';
+const t = k => (T[lang][k] ?? k);
+function setLang(l){lang=l;localStorage.setItem('lang',l);document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';}
+setLang(lang);
+
+/* ---------- helpers ---------- */
+let toastT;
+function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),2800);}
+const view = h => { $('#app').innerHTML = h; window.scrollTo(0,0); };
+let current = null;
+const go = fn => { stopScan(); current = fn; fn(); };
+let me=null, profile=null, store=null, S={admin_whatsapp:'',price_dzd:3000,trial_limit:50};
+async function loadSettings(){const {data}=await sb.from('app_settings').select('*').eq('id',1).maybeSingle();if(data)S=data;}
+const waLink = n => { let d=String(n||'').replace(/\D/g,''); if(d.startsWith('0')) d='213'+d.slice(1); return 'https://wa.me/'+d; };
+const money = n => Number(n).toLocaleString(lang==='ar'?'ar-DZ':'fr-FR',{maximumFractionDigits:2})+' '+t('da');
+const url = u => !u ? '' : (/^https?:\/\//i.test(u)?u:'https://'+u.replace(/^@/,''));
+function busy(btn,on){btn.disabled=on;if(on){btn._h=btn.innerHTML;btn.innerHTML='<span class="spin"></span>';}else if(btn._h)btn.innerHTML=btn._h;}
+
+/* ---------- images ---------- */
+function compress(file,max=1280){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{let w=img.width,h=img.height;const r=Math.min(1,max/Math.max(w,h));w=Math.round(w*r);h=Math.round(h*r);const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>{URL.revokeObjectURL(u);b?res(b):rej()},'image/jpeg',.85)};img.onerror=rej;img.src=u;});}
+async function upload(bucket,blob){const path=`${me.id}/${Date.now()}.jpg`;const {error}=await sb.storage.from(bucket).upload(path,blob,{contentType:'image/jpeg'});if(error)throw error;return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;}
+function imgPicker(label,current){return `<label>${label}</label><div class="preview" id="prev">${current?`<img src="${esc(current)}">`:'🖼️'}</div>
+<div class="two"><button type="button" class="btn sec" id="bCam">${t('camera')}</button><button type="button" class="btn sec" id="bGal">${t('gallery')}</button></div>
+<input type="file" id="fCam" accept="image/*" capture="environment" class="hide"><input type="file" id="fGal" accept="image/*" class="hide">`;}
+function bindImg(setBlob){
+  const on=async f=>{if(!f)return;try{const b=await compress(f);setBlob(b);$('#prev').innerHTML=`<img src="${URL.createObjectURL(b)}">`;}catch{toast(t('err'));}};
+  $('#bCam').onclick=()=>$('#fCam').click();$('#bGal').onclick=()=>$('#fGal').click();
+  $('#fCam').onchange=e=>on(e.target.files[0]);$('#fGal').onchange=e=>on(e.target.files[0]);
+}
+
+/* ---------- barcode scanner ---------- */
+let scanner=null, torchOn=false;
+async function stopScan(){if(scanner){try{await scanner.stop();scanner.clear();}catch{}scanner=null;}torchOn=false;}
+async function startScan(elId,onCode){
+  await stopScan();
+  const F=Html5QrcodeSupportedFormats;
+  scanner=new Html5Qrcode(elId,{formatsToSupport:[F.EAN_13,F.EAN_8,F.UPC_A,F.UPC_E,F.CODE_128,F.CODE_39,F.ITF,F.QR_CODE],experimentalFeatures:{useBarCodeDetectorIfSupported:true},verbose:false});
+  let done=false;
+  try{
+    await scanner.start({facingMode:'environment'},{fps:12,qrbox:(w,h)=>({width:Math.floor(w*.85),height:Math.floor(Math.min(h,w)*.5)})},
+      txt=>{if(done)return;done=true;if(navigator.vibrate)navigator.vibrate(60);onCode(txt);},()=>{});
+  }catch(e){toast(t('camErr'));scanner=null;}
+}
+async function toggleTorch(btn){
+  if(!scanner)return;
+  try{torchOn=!torchOn;await scanner.applyVideoConstraints({advanced:[{torch:torchOn}]});btn.classList.toggle('on',torchOn);}
+  catch{torchOn=!torchOn;toast(t('noTorch'));}
+}
+
+/* ---------- shared UI ---------- */
+function head(title,right=''){return `<div class="head"><h1>${title}</h1>${right}</div>`;}
+function nav(active){
+  const it=[['add','➕',t('add')],['qr','🔳',t('qrNav')],['settings','⚙️',t('settings')]];
+  return `<div class="nav">${it.map(([k,i,l])=>`<button data-n="${k}" class="${k===active?'on':''}"><span>${i}</span>${l}</button>`).join('')}</div>`;
+}
+function bindNav(){document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{const k=b.dataset.n;go(k==='add'?pageAdd:k==='qr'?()=>pageQR(false):pageSettings);});}
+function modal(html){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="box">${html}<button class="btn" id="mc">${t('close')}</button></div>`;document.body.appendChild(m);m.querySelector('#mc').onclick=()=>m.remove();}
+const storeUrl = () => location.origin+location.pathname+'?s='+store.slug;
+async function doLogout(){await stopScan();await sb.auth.signOut();me=profile=store=null;go(pageLogin);}
+
+/* ---------- login ---------- */
+function pageLogin(){
+  view(`<div class="hero" style="position:relative"><div class="langtop"><button data-l="ar">العربية</button><button data-l="fr">FR</button></div>
+  <div class="logo">🛍️</div><h1>Shop Pro</h1><p>${t('appName')}</p></div>
+  <div class="body"><div class="card" style="margin-top:-30px">
+  <label>${t('phone')}</label><input id="ph" type="tel" inputmode="tel" autocomplete="username" placeholder="05xxxxxxxx">
+  <label>${t('password')}</label><input id="pw" type="password" autocomplete="current-password">
+  <button class="btn" id="go">${t('enter')}</button></div></div>`);
+  document.querySelectorAll('.langtop button').forEach(b=>b.onclick=()=>{setLang(b.dataset.l);pageLogin();});
+  const run=async()=>{
+    const btn=$('#go');let phone=$('#ph').value.replace(/[\s-]/g,''),pw=$('#pw').value;
+    if(!/^\+?\d{8,15}$/.test(phone))return toast(t('badPhone'));
+    if(pw.length<6)return toast(t('badPw'));
+    busy(btn,true);
+    const email=phone+'@shoppro.app';
+    let {error}=await sb.auth.signInWithPassword({email,password:pw});
+    if(error){
+      const r=await sb.auth.signUp({email,password:pw,options:{data:{phone}}});
+      if(r.error){busy(btn,false);return toast(/registered/i.test(r.error.message)?t('wrongPw'):r.error.message);}
+      if(!r.data.session){busy(btn,false);return toast(t('confirmOff'));}
+    }
+    await boot();
+  };
+  $('#go').onclick=run;$('#pw').onkeydown=e=>{if(e.key==='Enter')run();};
+}
+
+/* ---------- merchant ---------- */
+async function pageStoreInfo(onboarding){
+  let blob=null;const s=store||{};
+  view(`${head(t('storeInfo'))}<div class="body"><div class="card">
+  <label>${t('storeName')}</label><input id="sn" value="${esc(s.name)}">
+  ${imgPicker(t('logo'),s.logo_url)}
+  <label>${t('social')}</label>
+  <input id="fb" placeholder="${t('fb')}" value="${esc(s.facebook)}" style="margin-bottom:8px" dir="ltr">
+  <input id="ig" placeholder="${t('ig')}" value="${esc(s.instagram)}" style="margin-bottom:8px" dir="ltr">
+  <input id="tk" placeholder="${t('tk')}" value="${esc(s.tiktok)}" dir="ltr">
+  <button class="btn" id="sv">${onboarding?t('next'):t('save')}</button></div></div>${onboarding?'':nav('settings')}`);
+  if(!onboarding)bindNav();
+  bindImg(b=>blob=b);
+  $('#sv').onclick=async()=>{
+    const name=$('#sn').value.trim();if(!name)return toast(t('nameReq'));
+    const btn=$('#sv');busy(btn,true);
+    try{
+      if(blob)row.logo_url=await upload('store-logos',blob);
+      let r;
+      if(store)r=await sb.from('stores').update(row).eq('id',store.id).select().single();
+      else r=await sb.from('stores').insert({...row,owner_id:me.id}).select().single();
+      if(r.error)throw r.error;
+      store=r.data;toast(t('saved'));
+      go(onboarding?()=>pageQR(true):pageSettings);
+    }catch(e){busy(btn,false);toast(t('err'));}
+  };
+}
+
+function pageQR(onboarding){
+  view(`${head(t('qrTitle'))}<div class="body"><div class="card center">
+  <div id="qrbox"></div><p class="mut">${t('qrHint')}</p>
+  <button class="btn sec" id="dl">⬇️ ${t('download')}</button>
+  ${onboarding?`<button class="btn" id="nx">${t('next')}</button>`:''}</div></div>${nav('qr')}`);
+  bindNav();
+  new QRCode($('#qrbox'),{text:storeUrl(),width:240,height:240,colorDark:'#1e1b3a',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+  $('#dl').onclick=()=>{
+    const tmp=document.createElement('div');
+    new QRCode(tmp,{text:storeUrl(),width:1024,height:1024,correctLevel:QRCode.CorrectLevel.H});
+    setTimeout(()=>{const c=tmp.querySelector('canvas');const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='shop-qr.png';a.click();},150);
+  };
+  if(onboarding)$('#nx').onclick=()=>go(pageAdd);
+}
+
+async function pageAdd(){
+  let blob=null;
+  view(`${head(t('addProduct'),'<span class="chip" id="cnt"></span>')}<div class="body"><div class="card">
+  <label>${t('pname')}</label><input id="pn">
+  <label>${t('price')}</label><input id="pp" type="number" inputmode="decimal" min="0" step="0.01">
+  <label>${t('barcode')}</label>
+  <div class="inline"><input id="pb" inputmode="numeric" dir="ltr"><button class="icon-btn" id="sc" type="button">📷</button></div>
+  <div class="scanbox hide" id="sbx"><div id="reader" class="reader"></div><button class="torch" id="tc" type="button">🔦</button><button class="closeb" id="cl" type="button">✕</button></div>
+  ${imgPicker(t('productImg'))}
+  <button class="btn" id="sv">${t('save')}</button></div></div>${nav('add')}`);
+  bindNav();bindImg(b=>blob=b);
+  if(store.plan==='trial'){
+    sb.from('products').select('id',{count:'exact',head:true}).eq('store_id',store.id).then(({count})=>{const c=$('#cnt');if(c)c.textContent=`${count??0} / ${S.trial_limit}`;});
+  }else $('#cnt').textContent='∞';
+  const closeScan=async()=>{await stopScan();$('#sbx').classList.add('hide');};
+  $('#sc').onclick=async()=>{$('#sbx').classList.remove('hide');await startScan('reader',async code=>{$('#pb').value=code;await closeScan();});};
+  $('#cl').onclick=closeScan;$('#tc').onclick=e=>toggleTorch(e.currentTarget);
+  $('#sv').onclick=async()=>{
+    const name=$('#pn').value.trim(),price=$('#pp').value,barcode=$('#pb').value.trim();
+    if(!name||price===''||!barcode)return toast(t('required'));
+    const btn=$('#sv');busy(btn,true);
+    try{
+      const image_url=blob?await upload('product-images',blob):null;
+      const {error}=await sb.from('products').insert({store_id:store.id,name,price:Number(price),barcode,image_url});
+      if(error)throw error;
+      toast(t('saved'));go(pageAdd);
+    }catch(e){
+      busy(btn,false);const m=String(e.message||'');
+      if(m.includes('TRIAL_LIMIT_REACHED'))modal(`<div class="ic">🔒</div>${t('trialEnd').replace('{p}',S.price_dzd)}\n<a href="${waLink(S.admin_whatsapp)}" target="_blank" style="color:#16a34a;font-weight:800" dir="ltr">${esc(S.admin_whatsapp)}</a>`);
+      else if(e.code==='23505')toast(t('dupBarcode'));else toast(t('err'));
+    }
+  };
+}
+
+function pageSettings(){
+  view(`${head(t('settings'))}<div class="body">
+  <div class="card"><label style="margin-top:0">${t('language')}</label>
+  <div class="lang"><button data-l="ar" class="${lang==='ar'?'on':''}">العربية</button><button data-l="fr" class="${lang==='fr'?'on':''}">Français</button></div></div>
+  <div class="card menu">
+  <button id="mp"><span>📦</span>${t('products')}</button>
+  <button id="ms"><span>🏪</span>${t('storeSettings')}</button>
+  <button id="lo" style="color:var(--err)"><span>🚪</span>${t('logout')}</button></div></div>${nav('settings')}`);
+  bindNav();
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{setLang(b.dataset.l);pageSettings();});
+  $('#mp').onclick=()=>go(pageProducts);$('#ms').onclick=()=>go(()=>pageStoreInfo(false));$('#lo').onclick=doLogout;
+}
+
+async function pageProducts(){
+  view(`${head(t('products'))}<div class="body"><div class="card" id="lst"><p class="center mut"><span class="spin" style="border-color:#ddd;border-top-color:var(--p)"></span></p></div>
+  <button class="btn sec" id="bk" style="margin-top:0">${t('back')}</button></div>${nav('settings')}`);
+  bindNav();$('#bk').onclick=()=>go(pageSettings);
+  const {data,error}=await sb.from('products').select('*').eq('store_id',store.id);
+  if(error)return toast(t('err'));
+  const list=(data||[]).sort((a,b)=>a.name.localeCompare(b.name,lang));
+  $('#lst').innerHTML=list.length?list.map(p=>`<div class="row"><div class="th" style="background-image:url('${esc(p.image_url||'')}')"></div>
+    <div class="nm">${esc(p.name)}<small>${money(p.price)}</small></div><button class="mini" data-id="${p.id}">${t('edit')}</button></div>`).join(''):`<p class="center mut">${t('noProducts')}</p>`;
+  document.querySelectorAll('.mini').forEach(b=>b.onclick=()=>go(()=>pageEdit(list.find(p=>p.id===b.dataset.id))));
+}
+
+function pageEdit(p){
+  let blob=null;
+  view(`${head(t('edit'))}<div class="body"><div class="card">
+  ${imgPicker(t('productImg'),p.image_url)}
+  <label>${t('pname')}</label><input id="pn" value="${esc(p.name)}">
+  <label>${t('price')}</label><input id="pp" type="number" inputmode="decimal" min="0" step="0.01" value="${p.price}">
+  <label>${t('barcode')}</label>
+  <div class="inline"><input id="pb" dir="ltr" value="${esc(p.barcode)}"><button class="icon-btn" id="sc" type="button">📷</button></div>
+  <div class="scanbox hide" id="sbx"><div id="reader" class="reader"></div><button class="torch" id="tc" type="button">🔦</button><button class="closeb" id="cl" type="button">✕</button></div>
+  <button class="btn" id="sv">${t('saveEdits')}</button>
+  <button class="btn sec" id="bk">${t('back')}</button></div></div>${nav('settings')}`);
+  bindNav();bindImg(b=>blob=b);
+  const closeScan=async()=>{await stopScan();$('#sbx').classList.add('hide');};
+  $('#sc').onclick=async()=>{$('#sbx').classList.remove('hide');await startScan('reader',async c=>{$('#pb').value=c;await closeScan();});};
+  $('#cl').onclick=closeScan;$('#tc').onclick=e=>toggleTorch(e.currentTarget);
+  $('#bk').onclick=()=>go(pageProducts);
+  $('#sv').onclick=async()=>{
+    const name=$('#pn').value.trim(),price=$('#pp').value,barcode=$('#pb').value.trim();
+    if(!name||price===''||!barcode)return toast(t('required'));
+    const btn=$('#sv');busy(btn,true);
+    try{
+      const row={name,price:Number(price),barcode};
+      if(blob)row.image_url=await upload('product-images',blob);
+      const {error}=await sb.from('products').update(row).eq('id',p.id);
+      if(error)throw error;
+      toast(t('saved'));go(pageProducts);
+    }catch(e){busy(btn,false);toast(e.code==='23505'?t('dupBarcode'):t('err'));}
+  };
+}
+
+/* ---------- admin ---------- */
+async function pageAdmin(tab='m'){
+  view(`${head('👑 '+t('admin'),`<button class="chip" id="lo" style="border:0;color:#fff;font:inherit;cursor:pointer">${t('logout')}</button>`)}
+  <div class="body"><div class="lang" style="margin-bottom:14px"><button data-t="m" class="${tab==='m'?'on':''}">${t('merchants')}</button><button data-t="s" class="${tab==='s'?'on':''}">${t('adminSettings')}</button></div><div id="ab"></div></div>`);
+  $('#lo').onclick=doLogout;
+  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>go(()=>pageAdmin(b.dataset.t)));
+  tab==='m'?adminMerchants():adminSettings();
+}
+async function adminMerchants(){
+  $('#ab').innerHTML=`<div class="card"><input id="q" placeholder="${t('search')}"><div id="ml" style="margin-top:8px"></div></div>`;
+  const {data,error}=await sb.from('stores').select('id,name,plan,created_at,profiles(phone)').order('created_at',{ascending:false}).limit(1000);
+  if(error)return toast(t('err'));
+  const draw=()=>{
+    const q=$('#q').value.trim().toLowerCase();
+    const l=data.filter(s=>!q||s.name.toLowerCase().includes(q)||(s.profiles?.phone||'').includes(q));
+    $('#ml').innerHTML=l.length?l.map(s=>`<div class="row"><div class="nm"><span dir="ltr">${esc(s.profiles?.phone)}</span><small>${esc(s.name)}</small></div>
+      <span class="pill ${s.plan==='unlimited'?'u':'t'}">${s.plan==='unlimited'?t('unlimited'):t('trial')}</span>
+      ${s.plan==='trial'?`<button class="mini" data-id="${s.id}">${t('activate')}</button>`:''}</div>`).join(''):`<p class="center mut">${t('noMerch')}</p>`;
+    document.querySelectorAll('#ml .mini').forEach(b=>b.onclick=async()=>{
+      if(!confirm(t('confirmActivate')))return;
+      const {error}=await sb.from('stores').update({plan:'unlimited'}).eq('id',b.dataset.id);
+      if(error)return toast(t('err'));
+      data.find(x=>x.id===b.dataset.id).plan='unlimited';toast(t('activated'));draw();
+    });
+  };
+  $('#q').oninput=draw;draw();
+}
+async function adminSettings(){
+  await loadSettings();
+  $('#ab').innerHTML=`<div class="card">
+  <label style="margin-top:0">${t('adminWa')}</label><input id="wa" dir="ltr" value="${esc(S.admin_whatsapp)}">
+  <label>${t('adminPhone')}</label><input id="ap" dir="ltr" value="${esc(profile.phone)}">
+  <label>${t('newPw')}</label><input id="np" type="password" autocomplete="new-password">
+  <button class="btn" id="sv">${t('save')}</button></div>`;
+  $('#sv').onclick=async()=>{
+    const btn=$('#sv');busy(btn,true);
+    try{
+      const wa=$('#wa').value.trim(),ph=$('#ap').value.replace(/[\s-]/g,''),np=$('#np').value;
+      if(wa!==S.admin_whatsapp){const {error}=await sb.from('app_settings').update({admin_whatsapp:wa}).eq('id',1);if(error)throw error;S.admin_whatsapp=wa;}
+      if(np){if(np.length<6)throw new Error(t('badPw'));const {error}=await sb.auth.updateUser({password:np});if(error)throw error;}
+      if(ph!==profile.phone){
+        if(!/^\+?\d{8,15}$/.test(ph))throw new Error(t('badPhone'));
+        const {error}=await sb.auth.updateUser({email:ph+'@shoppro.app'});if(error)throw error;
+        const r=await sb.from('profiles').update({phone:ph}).eq('id',me.id);if(r.error)throw r.error;
+        profile.phone=ph;
+      }
+      toast(t('saved'));
+    }catch(e){toast(e.message||t('err'));}
+    busy(btn,false);
+  };
+}
+
+/* ---------- customer ---------- */
+const ICON={
+fb:`<svg viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="#1877F2"/><path fill="#fff" d="M26.5 38V26h4l.6-4.6h-4.6v-3c0-1.3.4-2.2 2.3-2.2h2.4v-4.1c-.4 0-1.9-.2-3.5-.2-3.5 0-5.8 2.100-5.800 6v3.500h-4V26h4v12z"/></svg>`,
+ig:`<svg viewBox="0 0 48 48"><defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FEDA75"/><stop offset=".35" stop-color="#FA7E1E"/><stop offset=".6" stop-color="#D62976"/><stop offset=".85" stop-color="#962FBF"/><stop offset="1" stop-color="#4F5BD5"/></linearGradient></defs><rect width="48" height="48" rx="14" fill="url(#g)"/><rect x="12" y="12" width="24" height="24" rx="7" fill="none" stroke="#fff" stroke-width="3"/><circle cx="24" cy="24" r="5.500" fill="none" stroke="#fff" stroke-width="3"/><circle cx="31" cy="17" r="1.800" fill="#fff"/></svg>`,
+tk:`<svg viewBox="0 0 48 48"><rect width="48" height="48" rx="14" fill="#000"/><path fill="#25F4EE" d="M26 12h4c.3 3 2 5 5 5.400v4a9 9 0 0 1-5-1.600v8.600a7.500 7.500 0 1 1-7.500-7.500v4.100a3.400 3.400 0 1 0 3.500 3.400z" transform="translate(-1.500 1)"/><path fill="#FE2C55" d="M26 12h4c.3 3 2 5 5 5.400v4a9 9 0 0 1-5-1.600v8.600a7.500 7.500 0 1 1-7.500-7.500v4.100a3.400 3.400 0 1 0 3.500 3.400z" transform="translate(1.500 -1)"/><path fill="#fff" d="M26 12h4c.3 3 2 5 5 5.400v4a9 9 0 0 1-5-1.600v8.600a7.500 7.500 0 1 1-7.500-7.500v4.100a3.400 3.400 0 1 0 3.500 3.400z"/></svg>`};
+
+async function pageCustomer(slug){
+  const {data:st}=await sb.from('stores').select('id,name,logo_url,facebook,instagram,tiktok').eq('slug',slug).maybeSingle();
+  if(!st)return view(`<div class="hero"><div class="logo">😕</div><h1>${t('storeNF')}</h1></div>`);
+  document.title=st.name;
+  const soc=[['fb',st.facebook],['ig',st.instagram],['tk',st.tiktok]].filter(x=>x[1]);
+  const lt=`<div class="langtop"><button data-l="ar">العربية</button><button data-l="fr">FR</button></div>`;
+  const welcome=()=>{
+    view(`<div class="hero" style="position:relative">${lt}<div class="logo">${st.logo_url?`<img src="${esc(st.logo_url)}">`:'🏪'}</div>
+    <h1>${esc(st.name)}</h1><p>${t('welcome')} ${esc(st.name)} 👋</p></div>
+    <div class="body"><div class="card" style="margin-top:-28px">
+    ${soc.length?`<div class="soc">${soc.map(([k,u])=>`<a href="${esc(url(u))}" target="_blank" rel="noopener">${ICON[k]}</a>`).join('')}</div>`:''}
+    <button class="btn big" id="sc">📷 ${t('scanProduct')}</button></div></div>`);
+    document.querySelectorAll('.langtop button').forEach(b=>b.onclick=()=>{setLang(b.dataset.l);welcome();});
+    $('#sc').onclick=scanPage;
+  };
+  const scanPage=async()=>{
+    view(`${head(t('scanProduct'),`<button class="chip" id="hm" style="border:0;color:#fff;font:inherit;cursor:pointer">🏠</button>`)}
+    <div class="body"><div class="card"><div class="scanbox" style="margin:0"><div id="reader" class="reader"></div><button class="torch" id="tc">🔦</button></div>
+    <p class="center mut">${t('tapScan')}</p></div><div id="out"></div></div>`);
+    $('#hm').onclick=async()=>{await stopScan();welcome();};
+    $('#tc').onclick=e=>toggleTorch(e.currentTarget);
+    await startScan('reader',async code=>{
+      await stopScan();
+      const {data:p}=await sb.from('products').select('name,price,image_url').eq('store_id',st.id).eq('barcode',code.trim()).maybeSingle();
+      view(`${head(esc(st.name),`<button class="chip" id="hm" style="border:0;color:#fff;font:inherit;cursor:pointer">🏠</button>`)}
+      <div class="body"><div class="card res center">${p?`${p.image_url?`<img src="${esc(p.image_url)}">`:'<div class="preview">🖼️</div>'}<h2>${esc(p.name)}</h2><div class="pr">${money(p.price)}</div>`
+        :`<div style="font-size:54px">🔎</div><h2>${t('notFound')}</h2><p class="mut" dir="ltr">${esc(code)}</p>`}</div>
+      <button class="btn big" id="nw">📷 ${t('scanNew')}</button></div>`);
+      $('#hm').onclick=welcome;$('#nw').onclick=scanPage;
+    });
+  };
+  welcome();
+}
+
+/* ---------- boot ---------- */
+async function boot(){
+  const slug=new URLSearchParams(location.search).get('s');
+  if(slug)return pageCustomer(slug);
+  await loadSettings();
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session)return go(pageLogin);
+  me=session.user;
+  const {data:pr}=await sb.from('profiles').select('role,phone').eq('id',me.id).maybeSingle();
+  profile=pr||{role:'merchant',phone:''};
+  if(profile.role==='admin')return go(()=>pageAdmin('m'));
+  const {data:st}=await sb.from('stores').select('*').eq('owner_id',me.id).maybeSingle();
+  store=st;
+  if(!store)return go(()=>pageStoreInfo(true));
+  go(pageAdd);
+}
+boot();
+</script>
+</body>
+</html>
